@@ -5,3 +5,6 @@ FirstName LastName (NumberOfScore)1111-1111-1111-1111 1111 (Money)50000.0
 Boba Fett 2222-3333-4444-5555 1234 50000.0
 
 This program reads from file this data.
+
+The program reads data from a file on the computer, you log in as the desired user,
+ then the changed data will be rewritten to the file.
