@@ -1,0 +1,48 @@
+package BANKOMAT.ENTRY;
+import BANKOMAT.Card;
+import BANKOMAT.READ.Read;
+import BANKOMAT.ATM.AtmMoney;
+import java.io.*;
+import java.util.List;
+import java.util.Scanner;
+import java.util.stream.Collectors;
+public class insertCash {
+    public void insert(Card card, AtmMoney atm) {
+        
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Enter the amount to add to the score: ");
+
+        int plus = sc.nextInt();  
+        if(plus <= 100000) {      
+
+            List<Card> cardList = new Read().getReadList(); 
+            
+            List<Card> list1 = cardList.stream().map(m -> {
+                if (m.getAccountNumber().equals(card.getAccountNumber())) {  
+                    m.setScore(m.getScore() + plus);                         
+                    card.setScore(m.getScore());                             
+                }
+                return m;
+            }).collect(Collectors.toList());
+
+            atm.setMoney(atm.getMoney() + plus);                            
+
+            try (BufferedWriter fileWriter = new BufferedWriter(new FileWriter("C:\\Users\\shumo\\OneDrive\\Desktop\\BKM.txt"))) {
+                
+                for (Card thisList : list1) {
+                    fileWriter.write(thisList.getName() + " " + thisList.getSureName() + " " +
+                            thisList.getAccountNumber() + " " + thisList.getPassword() + " " +
+                            thisList.getScore());
+                    fileWriter.newLine();
+                }
+                System.out.println("Money has sent successfully on the score");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }else {   
+            System.out.println("Operation was not successfully, try again");
+        }
+        SelectPosition selectPosition = new SelectPosition();
+        selectPosition.toSelect(card,atm);
+    }
+}

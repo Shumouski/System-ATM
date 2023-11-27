@@ -1,0 +1,56 @@
+package BANKOMAT.ENTRY;
+import BANKOMAT.Card;
+import BANKOMAT.READ.Read;
+import BANKOMAT.ATM.AtmMoney;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.List;
+import java.util.Scanner;
+import java.util.stream.Collectors;
+
+public class getMoney {
+    int minus;        
+    AtmMoney atm;    
+    public getMoney(AtmMoney atm) {   
+        this.atm = atm;
+    }
+    public void pickUpMoney(Card card, AtmMoney atm) { 
+
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Enter the amount to get: ");
+        minus = sc.nextInt();                                               
+
+        if (minus <= atm.getMoney() && minus <= card.getScore()) {         
+            List<Card> cardList = new Read().getReadList();                
+
+            List<Card> list1 = cardList.stream().map(m -> {
+                if (m.getAccountNumber().equals(card.getAccountNumber())) {
+                    m.setScore(m.getScore() - minus);
+                    card.setScore(m.getScore());
+                }
+                return m;
+            }).collect(Collectors.toList());
+
+            atm.setMoney(atm.getMoney() - minus);
+
+            try (BufferedWriter fileWriter = new BufferedWriter(new FileWriter("C:\\Users\\shumo\\OneDrive\\Desktop\\BKM.txt"))) {
+
+                for (Card thisList : list1) {
+                    fileWriter.write(thisList.getName() + " " + thisList.getSureName() + " " +
+                            thisList.getAccountNumber() + " " + thisList.getPassword() + " " +
+                            thisList.getScore());
+                    fileWriter.newLine();
+                }
+                System.out.println("Thank you for using our bank");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {   
+            System.out.println("ATM does not have enough money or you have exceeded the card limit.");
+        }
+
+        SelectPosition selectPosition = new SelectPosition();
+        selectPosition.toSelect(card, atm);
+    }
+}

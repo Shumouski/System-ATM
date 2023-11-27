@@ -1,0 +1,47 @@
+package BANKOMAT.ENTRY;
+import BANKOMAT.Card;
+import BANKOMAT.READ.Read;
+import BANKOMAT.ATM.AtmMoney;
+import java.util.List;
+import java.util.Scanner;
+
+public class Entry {
+    public static Card toEntry(Read cards, AtmMoney atm) {
+        Scanner sc = new Scanner(System.in);
+
+        int maxAttempts = 3;     
+        int attempts = 0;        
+        int enterPassword;       
+        boolean check = false;   
+
+        List<Card> list = cards.getReadList();   
+        Card card = null;                        
+
+        while (attempts < maxAttempts) {         
+            System.out.println("Enter password, please");  
+            enterPassword = sc.nextInt();                  
+            for (Card c : list) {                          
+                if (enterPassword == c.getPassword()) {    
+                    card = c;                              
+                    check = true;                          
+                    System.out.println("Password is correct, welcome to the system " + c.getName() + " " + c.getSureName());
+                    break;                                 
+                }
+            }
+            if (check) {
+                break;
+            } else {
+                attempts++;
+                System.out.println("Incorrect password. You have " + (maxAttempts - attempts) + " attempts left.");
+            }
+        }
+        if (card == null) {
+            System.out.println("Card is blocked. Please call the bank to decide problem.");
+            System.exit(0);
+        }
+      
+        SelectPosition selectPosition = new SelectPosition();
+        selectPosition.toSelect(card, atm);
+        return card;
+    }
+}

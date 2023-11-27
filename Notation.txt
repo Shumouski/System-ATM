@@ -1,0 +1,7 @@
+So, this program is working when you have note, when is user data.
+
+For example: 
+FirstName LastName (NumberOfScore)1111-1111-1111-1111 1111 (Money)50000.0
+Boba Fett 2222-3333-4444-5555 1234 50000.0
+
+This program reads from file this data.
